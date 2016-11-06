@@ -1,8 +1,8 @@
 {
   "name": "nucleun-validator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generic Validator",
-  "main": "index.js",
+  "main": "dist/nucleun-validator.min.js",
   "keywords": [
     "nucleun",
     "generic",
