@@ -26,13 +26,12 @@ describe('# Validator', () => {
     ];
 
     const validator = new Validator();
-    const validatorSpy = sinon.spy();
 
+    const validatorSpy = sinon.spy();
     validator.validate(schema)
       .then(validatorSpy);
 
     const validatorSpy2 = sinon.spy();
-
     schema[0].value = ['a'];
     validator.validate(schema)
       .then(validatorSpy2);
@@ -41,11 +40,44 @@ describe('# Validator', () => {
       validatorSpy.should.have.been.calledOnce;
       validatorSpy.should.have.been.calledWith({ validationErrors: { tipo: ['Field "tipo" is invalid'] } });
       validatorSpy2.should.have.been.calledOnce;
-      validatorSpy2.should.have.been.calledWith({ validationErrors: { tipo: ['Fsield "tipo" is invalid'] } });
+      validatorSpy2.should.have.been.calledWith({ validationErrors: {} });
       done();
     });
+  });
 
+  it('should validate string type', (done) => {
+    const schema = [{
+      key: 'name',
+      type: 'string',
+      value: '',
+      required: true
+    }];
 
+    const validator = new Validator();
+
+    const validatorSpy = sinon.spy();
+    validator.validate(schema)
+      .then(validatorSpy);
+
+    const validatorSpy2 = sinon.spy();
+    schema[0].value = 'João Neto';
+    validator.validate(schema)
+      .then(validatorSpy2);
+
+    const validatorSpy3 = sinon.spy();
+    schema[0].value = [''];
+    validator.validate(schema)
+      .then(validatorSpy3);
+
+    process.nextTick(() => {
+      validatorSpy.should.have.been.calledOnce;
+      validatorSpy.should.have.been.calledWith({ validationErrors: { name: ['Field "name" is required', 'Field "name" is invalid'] } });
+      validatorSpy2.should.have.been.calledOnce;
+      validatorSpy2.should.have.been.calledWith({ validationErrors: {} });
+      validatorSpy3.should.have.been.calledOnce;
+      validatorSpy3.should.have.been.calledWith({ validationErrors: { name: ['Field "name" is invalid'] } });
+      done();
+    });
   });
 
 });
