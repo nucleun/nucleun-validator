@@ -5,8 +5,7 @@ export default class Validator extends Module {
   constructor() {
     super();
 
-    this.validationErrors = {};
-    this.isValid = false;
+    this._reset();
 
     this.use('array', array);
     // this.use('boolean', boolean);
@@ -14,7 +13,7 @@ export default class Validator extends Module {
     // this.use('number', number);
     // this.use('object', object);
     this.use('required', required);
-    // this.use('string', string);
+    this.use('string', string);
   }
 
   _validateFieldType(field, validationType) {
@@ -30,7 +29,7 @@ export default class Validator extends Module {
   _setDefaultFieldValue(field) {
     field.value = (!field.value && typeof field.default === 'function') ?
       field.default(field) :
-      field.default || field.value;
+      field.value || field.default;
   }
 
   validateField(field) {
@@ -59,7 +58,7 @@ export default class Validator extends Module {
       Promise.all(fields.map(this.validateField.bind(this))) :
       this.validateField(fields);
 
-    // this._reset();
+    this._reset();
 
     return validationPromise
       .then((fields) => {

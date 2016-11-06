@@ -31,11 +31,21 @@ describe('# Validator', () => {
     validator.validate(schema)
       .then(validatorSpy);
 
+    const validatorSpy2 = sinon.spy();
+
+    schema[0].value = ['a'];
+    validator.validate(schema)
+      .then(validatorSpy2);
+
     process.nextTick(() => {
       validatorSpy.should.have.been.calledOnce;
       validatorSpy.should.have.been.calledWith({ validationErrors: { tipo: ['Field "tipo" is invalid'] } });
+      validatorSpy2.should.have.been.calledOnce;
+      validatorSpy2.should.have.been.calledWith({ validationErrors: { tipo: ['Fsield "tipo" is invalid'] } });
       done();
     });
+
+
   });
 
 });
